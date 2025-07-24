@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Prompt Generator Video AI Konsisten</title>
+  <style>
+    body { font-family: sans-serif; background: #f4f4f4; padding: 20px; max-width: 800px; margin: auto; }
+    textarea, button, input, select { width: 100%; padding: 12px; margin-top: 10px; font-size: 1rem; }
+    #imageOutput, #videoOutput, #thumbnailOutput { background: white; padding: 15px; margin-top: 20px; border-radius: 8px; border: 1px solid #ccc; white-space: pre-wrap; }
+    button { background-color: #007bff; color: white; border: none; cursor: pointer; }
+    button:hover { background-color: #0056b3; }
+    h2 { margin-top: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>🎬 Generator Prompt AI Konsisten (Per Step)</h1>
+
+  <label>Masukkan ide video (dalam Bahasa Indonesia):</label>
+  <textarea id="input" rows="3" placeholder="Contoh: Cara membuat mobil-mobilan dari botol plastik bekas untuk anak-anak"></textarea>
+
+  <label>Pilih Gaya Visual:</label>
+  <select id="style">
+    <option value="realistic">Realistic</option>
+    <option value="cartoon">Cartoon</option>
+    <option value="anime">Anime</option>
+    <option value="claymation">Claymation</option>
+    <option value="3d render">3D Render</option>
+  </select>
+
+  <button onclick="generateImagePrompts()">🖼️ Buat Prompt Gambar</button>
+  <div id="imageOutput"></div>
+
+  <button onclick="generateVideoPrompts()">🎞️ Buat Prompt Video dari Gambar</button>
+  <div id="videoOutput"></div>
+
+  <button onclick="generateThumbnailPrompt()">🖼️ Buat Prompt Thumbnail Menarik</button>
+  <div id="thumbnailOutput"></div>
+
+  <button onclick="copyAll()">📋 Salin Semua</button>
+
+  <script>
+    const character = "a young boy with curly hair wearing a red shirt";
+    const setting = "bright indoor room with wooden floor and natural daylight";
+    const object = "DIY toy car made from green plastic bottle and colorful bottle caps";
+
+    const steps = [
+      {
+        base: `top-down view of hands placing plastic bottle, glue, scissors, and bottle caps on a table, `,
+        visual: `Top-down view: hands placing materials (plastic bottle, glue, scissors, bottle caps) neatly on a table. Consistent lighting in ${setting}.`,
+        narration: `Let’s begin by laying out all the tools we’ll use to build a creative recycled toy.`
+      },
+      {
+        base: `close-up of cutting green plastic bottle in half with scissors on a wooden table, `,
+        visual: `Close-up: cutting the green plastic bottle in half with scissors. Smooth motion, same table and lighting as before.`,
+        narration: `Now, cut the plastic bottle in half. This will form the base of our ${object}.`
+      },
+      {
+        base: `gluing four colorful bottle caps onto a green plastic bottle, DIY toy, `,
+        visual: `Gluing four colorful bottle caps as wheels onto the plastic bottle. Shot remains steady and clear in ${setting}.`,
+        narration: `Attach four bottle caps to the sides of the bottle. These will become the wheels of the toy.`
+      },
+      {
+        base: `${character} placing the finished ${object} on the ground indoors, `,
+        visual: `Camera tracks the same ${character} placing the finished ${object} on the ground, preparing to test it.`,
+        narration: `Once it’s dry, let’s test our toy car! Place it carefully on the ground.`
+      },
+      {
+        base: `slow motion of ${character} joyfully pushing the toy car across the wooden floor, `,
+        visual: `Slow motion: the same ${character} joyfully pushing the toy car across the wooden floor. Warm tone, consistent background.`,
+        narration: `Watch it go! The toy rolls smoothly — a result of creativity and recycling.`
+      },
+      {
+        base: `zoom out of ${character} showing off the toy car to the camera, happy face, `,
+        visual: `Zoom out: ${character} laughs and shows the toy to the camera proudly. Scene ends in the same ${setting}.`,
+        narration: `Another amazing creation from everyday waste. Great job, little inventor!`
+      }
+    ];
+
+    function generateImagePrompts() {
+      const input = document.getElementById('input').value.trim();
+      const style = document.getElementById('style').value;
+      if (!input) {
+        alert("Masukkan ide dulu ya!");
+        return;
+      }
+      let output = `🖼️ Image Prompts for: "${input}"\nStyle: ${style}\n\n`;
+      steps.forEach((step, index) => {
+        output += `📸 Step ${index + 1}: ${step.base}${setting}, ${style} style\n`;
+      });
+      document.getElementById('imageOutput').innerText = output;
+    }
+
+    function generateVideoPrompts() {
+      const input = document.getElementById('input').value.trim();
+      const style = document.getElementById('style').value;
+      if (!input) {
+        alert("Masukkan ide dulu ya!");
+        return;
+      }
+      let output = `🎞️ Video Prompts for: "${input}"\nStyle: ${style}\n\n`;
+      steps.forEach((step, index) => {
+        output += `🎬 Step ${index + 1}\n`;
+        output += `**Visual Prompt:** ${step.visual} Styled in ${style}. [Maintain same character, lighting, and setting for consistency]\n`;
+        output += `**Narration (English):** ${step.narration}\n\n`;
+      });
+      document.getElementById('videoOutput').innerText = output;
+    }
+
+    function generateThumbnailPrompt() {
+      const input = document.getElementById('input').value.trim();
+      const style = document.getElementById('style').value;
+      if (!input) {
+        alert("Masukkan ide dulu ya!");
+        return;
+      }
+      const prompt = `📌 Thumbnail Prompt:
+A highly engaging YouTube thumbnail for a DIY project titled: "${input}". Show the moment of surprise or excitement – the child happily holding or testing the finished ${object}. Use vibrant colors, clear focus, exaggerated expression (wow/happy face), bold lighting. Styled in ${style}.
+Text on thumbnail: "Dari Botol Jadi Mainan?!" or "Keren Banget!"`;
+      document.getElementById('thumbnailOutput').innerText = prompt;
+    }
+
+    function copyAll() {
+      const imageText = document.getElementById('imageOutput').innerText;
+      const videoText = document.getElementById('videoOutput').innerText;
+      const thumbnailText = document.getElementById('thumbnailOutput').innerText;
+      const text = imageText + '\n\n' + videoText + '\n\n' + thumbnailText;
+      if (!text.trim()) {
+        alert("Belum ada hasil untuk disalin.");
+        return;
+      }
+      navigator.clipboard.writeText(text)
+        .then(() => alert("✅ Semua prompt berhasil disalin!"))
+        .catch(() => alert("❌ Gagal menyalin."));
+    }
+  </script>
+
+</body>
+</html>
